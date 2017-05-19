@@ -20,6 +20,8 @@
                 height: 100vh;
                 margin: 0;
             }
+            @charset "utf-8";
+
 
             .full-height {
                 height: 100vh;
@@ -77,7 +79,8 @@
                 </div>
             @endif
 
-            <div class="content">
+
+                <div class="content">
                 <div class="title m-b-md">
                     Laravel
                 </div>
@@ -88,6 +91,7 @@
                     <a href="https://laravel-news.com">News</a>
                     <a href="https://forge.laravel.com">Forge</a>
                     <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="{{url('users')}}">Users</a>
                 </div>
             </div>
         </div>

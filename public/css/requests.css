@@ -1,0 +1,16 @@
+.inline {
+	display: inline;
+}
+
+.alignCenter {
+	text-align: center;
+}
+
+
+
+
+/*Refuse page*/
+.data-label {
+	text-align: left;
+	padding-top: 7px;
+}

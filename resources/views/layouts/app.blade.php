@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Scripts -->
     <script>
@@ -35,8 +36,8 @@
                         </button>
 
                         <!-- Branding Image -->
-                        <a class="navbar-brand" href="{{ url('/') }}">
-                            {{ config('app.name', 'Laravel') }}
+                        <a class="navbar-brand" href="{{ route('home') }}">
+                            {{ config('app.name', 'Print It') }}
                         </a>
                     </div>
 
@@ -49,6 +50,7 @@
                         <!-- Right Side Of Navbar -->
                         <ul class="nav navbar-nav navbar-right">
                             <!-- Authentication Links -->
+                            <li><a href="{{ route('requests.show') }}">Pedidos de Impressão</a></li>
                             @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
@@ -77,8 +79,9 @@
                 </div>
             </div>
         </nav>
-
-        @yield('content')
+        <div class="container">
+            @yield('content')
+        </div>
     </div>
 
     <!-- Scripts -->

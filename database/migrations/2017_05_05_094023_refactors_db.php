@@ -40,6 +40,7 @@ class RefactorsDb extends Migration
             $table->string('profile_photo')->nullable();
             $table->string('profile_url')->nullable();
             $table->string('presentation')->nullable();
+            $table->string('email_token')->nullable();
 
             // Non-normalized fields to handle statistics
             // They are maintained by the application layer

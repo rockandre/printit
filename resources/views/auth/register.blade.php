@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -75,10 +75,14 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('department_id') ? ' has-error' : '' }}">
-                            <label for="department_id" class="col-md-4 control-label">Department ID (Alterar para lista de departamentos)*</label>
-
+                            <label for="department_id" class="col-md-4 control-label">Department ID*</label>
                             <div class="col-md-6">
-                                <input id="department_id" type="number" class="form-control" name="department_id" value="{{ old('department_id') }}" required>
+                                <select id="department_id" class="form-control" name="department_id" value="{{ old('department_id') }}" required> 
+                                    <option disabled selected> -- Select a department --</option>
+                                    @foreach($departments as $department)
+                                        <option value="{{$department->id}}">{{$department->name}}</option>
+                                    @endforeach
+                                </select>
 
                                 @if ($errors->has('department_id'))
                                     <span class="help-block">
@@ -87,12 +91,12 @@
                                 @endif
                             </div>
                         </div>
-
+                        <!--
                         <div class="form-group{{ $errors->has('profile_photo') ? ' has-error' : '' }}">
                             <label for="profile_photo" class="col-md-4 control-label">Profile Photo</label>
 
                             <div class="col-md-6">
-                                <input id="profile_photo" type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg" class="form-control" name="profile_photo" value="{{ old('profile_photo') }}" >
+                                <input id="profile_photo" type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg" class="form-control" name="profile_photo" >
 
                                 @if ($errors->has('profile_photo'))
                                     <span class="help-block">
@@ -120,7 +124,7 @@
                             <label for="presentation" class="col-md-4 control-label">Presentation</label>
 
                             <div class="col-md-6">
-                                <textarea id="presentation" class="form-control" name="presentation" value="{{ old('presentation') }}" style="max-width: 100%;"></textarea>
+                                <textarea id="presentation" class="form-control" name="presentation" value="{{ old('presentation') }}" style="max-width: 100%; height: 200px"></textarea>
 
                                 @if ($errors->has('presentation'))
                                     <span class="help-block">
@@ -129,7 +133,7 @@
                                 @endif
                             </div>
                         </div>
-
+                        -->
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

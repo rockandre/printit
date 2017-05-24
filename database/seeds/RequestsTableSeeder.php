@@ -70,6 +70,7 @@ class RequestsTableSeeder extends Seeder
             $request['closed_date'] = $faker->dateTimeBetween($request['created_at'], $request['due_date']);
             $request['satisfaction_grade'] = $faker->numberBetween(1, 3);
             $request['printer_id'] = $faker->randomElement($printers);
+            DB::table('requests')->insert($request);
         }
     }
 

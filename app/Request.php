@@ -29,9 +29,44 @@ class Request extends Model
         'status', 'due_date', 'description', 'quantity', 'paper_size', 'paper_type', 'file', 'closed_date', 'refused_reason', 'satisfaction_grade',  'colored', 'stapled', 'front_back'
     ];
 
+
+    public function statusToStr()
+    {
+        switch ($this->status) {
+            case 0:
+                return 'Pendente';
+            case 1:
+                return 'Recusado';
+            case 2:
+                return 'Concluido';
+        }
+    }
+
+    public function paper_typeToStr()
+    {
+        switch ($this->paper_type) {
+            case 0:
+                return 'Papel Rascunho';
+            case 1:
+                return 'Papel Normal';
+            case 2:
+                return 'Papel Fotogrático';
+        }
+    }
+
+    public function coloredToStr()
+    {
+        switch ($this->colored) {
+            case 0:
+                return 'Cores';
+            case 1:
+                return 'Preto e Branco';
+        }
+    }
+
     public function user()
     {
-    	return $this->belongsTo('App\User');
+    	return $this->belongsTo('App\User', 'owner_id');
     }
 
     public function printer()

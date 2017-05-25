@@ -17,7 +17,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/users/confirmation/{token}', 'Auth\RegisterController@confirmation')->name('confirmation');
 
-Route::get('request/create', 'RequestController@create')->name('requests.create');
+Route::get('request/create', 'RequestController@create')->name('request.create');
+Route::post('request/create', 'RequestController@store')->name('request.create');
+Route::get('request/edit/{request}', 'RequestController@edit')->name('request.edit');
+Route::post('request/edit/{requestToUpdate}', 'RequestController@update')->name('request.update');
 
 // Routes requests
 Route::get('/requests', 'RequestController@listRequests')->name('requests.list');

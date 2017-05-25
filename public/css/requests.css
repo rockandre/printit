@@ -1,13 +1,10 @@
 .inline {
-	display: inline;
+	display: inline-block;
 }
 
 .alignCenter {
 	text-align: center;
 }
-
-
-
 
 /*Refuse page*/
 .data-label {

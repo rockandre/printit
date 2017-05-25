@@ -29,7 +29,7 @@
 
 							<div class="col-md-6">
 								<ul>
-									<li>A{{ $request->paper_size }}</li>
+									<li>{{ $request->paper_sizeToStr() }}</li>
 									<li>{{ $request->paper_typeToStr()}}</li>
 									<li>{{ $request->coloredToStr()}}</li>
 								</ul>
@@ -52,7 +52,7 @@
 						<div class="form-group">
 							<div class="col-md-8 col-md-offset-4">
 								<button type="submit" class="btn btn-sm btn-success">Confirmar</button>
-								<a href="{{ route('requests.show') }}" class="btn btn-sm btn-danger">Cancelar</a>
+								<a href="{{ route('requests.list') }}" class="btn btn-sm btn-danger">Cancelar</a>
 							</div>
 						</div>
 					</form>

@@ -4,11 +4,11 @@
 <link rel="stylesheet" href="{{ URL::asset('css/requests.css') }}" />
 <div>
     <h1>Pedidos de Impressão</h1>
+
     <table class="table table-striped">
         <thead>
             <tr>
-                <!--<th>Thumbnail</th>-->
-                <th>Funcionario</th>
+                <th>Funcionário</th>
                 <th>Departamento</th>
                 <th>Estado</th>
                 <th>Tipo de Impressão</th>
@@ -24,7 +24,7 @@
                 <td>{{ $request->statusToStr() }}</td>
                 <td>
                     <ul>
-                        <li>A{{ $request->paper_size }}</li>
+                        <li>{{ $request->paper_sizeToStr() }}</li>
                         <li>{{ $request->paper_typeToStr()}}</li>
                         <li>{{ $request->coloredToStr()}}</li>
                     </ul>
@@ -32,12 +32,20 @@
                 </td>
                 <td>{{ $request->due_date }}</td>
                 <td>
-                    @if($request->status == '0')
                     <div class="inline">
+                        <a href="{{ route('show.request', $request->id) }}" class="btn btn-sm btn-primary">Detalhes</a>
+                        @if($request->status == '0')
                         <a href="{{ route('finish.request', $request->id) }}" class="btn btn-sm btn-success">Concluir</a>
-                        <a href="{{ route('refuse.request', $request->id) }}" class="btn btn-sm btn-danger">Recusar</a>
+                        <a href="{{ route('refuse.request', $request->id) }}" class="btn btn-sm btn-warning">Recusar</a>
+                        @endif
+                        <form action="{{route('delete.request', $request)}}" method="post" class="inline">
+                            {{ method_field('DELETE') }}
+                            {{ csrf_field() }}
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-sm btn-danger">Remover</button>
+                            </div>
+                        </form>
                     </div>
-                    @endif
                 </td>
                 
             </tr>

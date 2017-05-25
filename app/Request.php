@@ -26,7 +26,7 @@ class Request extends Model
      * @var array
      */
     protected $fillable = [
-        'status', 'due_date', 'description', 'quantity', 'paper_size', 'paper_type', 'file', 'closed_date', 'refused_reason', 'satisfaction_grade',  'colored', 'stapled', 'front_back'
+        'status', 'due_date', 'description', 'quantity', 'paper_size', 'paper_type', 'file', 'closed_date', 'refused_reason', 'satisfaction_grade',  'colored', 'stapled', 'front_back', 'owner_id'
     ];
 
 
@@ -58,9 +58,10 @@ class Request extends Model
     {
         switch ($this->colored) {
             case 0:
-                return 'Cores';
-            case 1:
                 return 'Preto e Branco';
+            case 1:
+                return 'Cores';
+            
         }
     }
 

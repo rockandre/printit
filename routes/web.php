@@ -12,6 +12,7 @@
 */
 Auth::routes();
 
+Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/users/confirmation/{token}', 'Auth\RegisterController@confirmation')->name('confirmation');
@@ -21,13 +22,29 @@ Route::post('request/create', 'RequestController@store')->name('request.create')
 Route::get('request/edit/{request}', 'RequestController@edit')->name('request.edit');
 Route::post('request/edit/{requestToUpdate}', 'RequestController@update')->name('request.update');
 
-
-// Routes admin
-Route::get('/requests', 'RequestController@show')->name('requests.show');
-Route::get('/admin/users', 'AdministratorController@showUsers')->name('users.admin');
-Route::get('/admin/comments', 'AdministratorController@showComments')->name('comments.admin');
-
+// Routes requests
+Route::get('/requests', 'RequestController@listRequests')->name('requests.list');
+Route::delete('/request/delete/{request}', 'RequestController@deleteRequest')->name('delete.request');
 Route::get('request/refuse/{id}', 'RequestController@refuseRequest')->name('refuse.request');
 Route::post('request/refuse/{id}', 'RequestController@updateRefuseRequest')->name('refuse.request');
 Route::get('request/finish/{id}', 'RequestController@finishRequest')->name('finish.request');
 Route::post('request/finish/{id}', 'RequestController@updateFinishRequest')->name('finish.request');
+Route::get('request/show/{id}', 'RequestController@showRequest')->name('show.request');
+Route::post('request/evaluate/{id}', 'RequestController@evaluateRequest')->name('evaluate.request');
+
+
+/*Route::get('/requests/{search?}', 'RequestController@search')->name('requests.search');
+Route::get('/requests/{orderParam?}/{orderType?}', 'RequestController@orderBy')->name('requests.search');*/
+
+
+// Routes admin
+Route::get('/users/blocked', 'UserController@showBlockedUsers')->name('users.blocked');
+Route::post('/user/unlock', 'UserController@unlockUser')->name('unlock.user');
+//Route::get('/admin/comments', 'AdministratorController@showComments')->name('comments.admin');
+
+
+//Route Image
+Route::get('/profileImage/{filename}', function ($filename)
+{
+	return Image::make(Storage::disk('local')->get('public/profiles/'.$filename))->response();
+})->name('profile.image');

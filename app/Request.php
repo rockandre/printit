@@ -42,6 +42,24 @@ class Request extends Model
         }
     }
 
+    public function paper_sizeToStr()
+    {
+        switch ($this->paper_size) {
+            case 1:
+                return 'A1';
+            case 2:
+                return 'A2';
+            case 3:
+                return 'A3';
+            case 4:
+                return 'A4';
+            case 5:
+                return 'A5';
+            case 6:
+                return 'A6';
+        }
+    }
+
     public function paper_typeToStr()
     {
         switch ($this->paper_type) {
@@ -61,7 +79,26 @@ class Request extends Model
                 return 'Preto e Branco';
             case 1:
                 return 'Cores';
-            
+        }
+    }
+
+    public function front_backToStr()
+    {
+        switch ($this->front_back) {
+            case 0:
+                return 'Página única';
+            case 1:
+                return 'Frente e verso';
+        }
+    }
+
+    public function stapledToStr()
+    {
+        switch ($this->stapled) {
+            case 0:
+                return 'Não agrafado';
+            case 1:
+                return 'Agrafado';
         }
     }
 

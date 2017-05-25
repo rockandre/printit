@@ -115,7 +115,7 @@ class RefactorsDb extends Migration
             $table->foreign('request_id')->references('id')->on('requests')->onDelete('cascade');
 
             $table->integer('parent_id')->unsigned()->nullable();
-            $table->foreign('parent_id')->references('id')->on('comments');
+            $table->foreign('parent_id')->references('id')->on('comments')->onDelete('cascade');
 
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');

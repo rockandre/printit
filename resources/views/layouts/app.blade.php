@@ -53,57 +53,60 @@
                         <!-- Right Side Of Navbar -->
                         <ul class="nav navbar-nav navbar-right">
                             <!-- Authentication Links -->
-                            <li><a href="{{ route('requests.list') }}">Pedidos de Impressão</a></li>
-                            <li><a href="{{ route('users.blocked') }}">Utilizadores Bloqueados</a></li>
+                            
                             @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                             @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('request.create') }}">
-                                        Criar pedido
-                                    </a>
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                                        Logout
+                                @if (Auth::user()->isAdmin())
+                                <li><a href="{{ route('users.blocked') }}">Utilizadores Bloqueados</a></li>
+                                @endif()
+                                <li><a href="{{ route('requests.list') }}">Pedidos de Impressão</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        {{ Auth::user()->name }} <span class="caret"></span>
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ route('request.create') }}">
+                                                Criar pedido
+                                            </a>
+                                            <li>
+                                                <a href="{{ route('logout') }}"
+                                                onclick="event.preventDefault();
+                                                document.getElementById('logout-form').submit();">
+                                                Logout
+                                            </a>
+
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                {{ csrf_field() }}
+                                            </form>
+                                        </li>
+                                    </ul>
                                 </li>
-                            </ul>
-                        </li>
-                        @endif
-                    </ul>
+                            @endif
+                        </ul>
+                    </div>
                 </div>
+            </nav>
+            <div class="container">
+                @yield('content')
             </div>
-        </nav>
-        <div class="container">
-            @yield('content')
         </div>
-    </div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+        <!-- Scripts -->
+        <script src="{{ asset('js/app.js') }}"></script>
 
-    <!-- Date Picker -->
-      <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-      <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-      <script>
-      $(function() {
-        $( "#date" ).datepicker({ dateFormat: 'dd-mm-yy' });
-        
-      });
-      </script>
+        <!-- Date Picker -->
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+        <script>
+          $(function() {
+            $( "#date" ).datepicker({ dateFormat: 'dd-mm-yy' });
+            
+        });
+    </script>
 
 
 </body>

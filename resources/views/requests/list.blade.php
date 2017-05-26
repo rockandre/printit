@@ -37,8 +37,8 @@
                 <td>
                     <ul>
                         <li>{{ $request->paper_sizeToStr() }}</li>
-                        <li>{{ $request->paper_typeToStr()}}</li>
-                        <li>{{ $request->coloredToStr()}}</li>
+                        <li>{{ $request->paper_typeToStr() }}</li>
+                        <li>{{ $request->coloredToStr() }}</li>
                     </ul>
 
                 </td>
@@ -50,6 +50,7 @@
                         <a href="{{ route('finish.request', $request->id) }}" class="btn btn-sm btn-success">Concluir</a>
                         <a href="{{ route('refuse.request', $request->id) }}" class="btn btn-sm btn-warning">Recusar</a>
                         @endif
+                        @if($request->user->id == Auth::user()->id)
                         <form action="{{route('delete.request', $request)}}" method="post" class="inline">
                             {{ method_field('DELETE') }}
                             {{ csrf_field() }}
@@ -57,6 +58,7 @@
                                 <button type="submit" class="btn btn-sm btn-danger">Remover</button>
                             </div>
                         </form>
+                        @endif
                     </div>
                 </td>
                 

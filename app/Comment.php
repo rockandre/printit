@@ -30,6 +30,11 @@ class Comment extends Model
     ];
 
 
+    public function comments()
+    {
+        return $this->hasMany('App\Comment', 'parent_id');
+    }
+
     public function user()
     {
     	return $this->belongsTo('App\User');

@@ -25,7 +25,7 @@
 			<br>
 			<p><b>Data do Pedido: </b>{{ $request->created_at }}</p>
 			<p><b>Estado do Pedido: </b>{{ $request->statusToStr() }}</p>
-			@if ($request->status != 0)
+			@if ($request->status == 2)
 			<p><b>Avaliação do Pedido: </b></p>
 			<div class="col-md-12">
 				@if ( empty($request->satisfaction_grade) || $request->satisfaction_grade == 0)

@@ -100,7 +100,7 @@
       <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
       <script>
       $(function() {
-        $( "#due_date" ).datepicker({ dateFormat: 'dd-mm-yy' });
+        $( "#date" ).datepicker({ dateFormat: 'dd-mm-yy' });
         
       });
       </script>

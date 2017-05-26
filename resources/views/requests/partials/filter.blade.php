@@ -33,7 +33,7 @@
 </select>
 </th>
 <th>Date
-  <input id="due_date" type="text" class="form-control" name="due_date">
+  <input id="date" type="text" class="form-control" name="date">
 </th>
 <th>
   <button type="submit" class="btn btn-primary">

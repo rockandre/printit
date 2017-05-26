@@ -18,7 +18,7 @@
                             <label for="due_date" class="col-md-4 control-label">Data limite(opcional)</label>
 
                             <div class="col-md-6">
-                                <input id="due_date" type="text" class="form-control" name="due_date" value="{{ old('due_date', $request->due_date) }}">
+                                <input id="date" type="text" class="form-control" name="due_date" value="{{ old('due_date', $request->due_date) }}">
 
                                 @if ($errors->has('due_date'))
                                     <span class="help-block">

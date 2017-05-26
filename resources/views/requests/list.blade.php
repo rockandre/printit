@@ -43,7 +43,7 @@
                     </ul>
 
                 </td>
-                <td>{{ $request->due_date }}</td>
+                <td>{{ $request->created_at->format('d-m-Y')   }}</td>
                 <td>
                     <div class="inline">
                         <a href="{{ route('show.request', $request->id) }}" class="btn btn-sm btn-primary">Detalhes</a>

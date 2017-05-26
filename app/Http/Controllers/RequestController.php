@@ -218,4 +218,90 @@ class RequestController extends Controller
         
         return redirect()->route('requests.show');
     }
+
+    //Estatisticas!!
+
+    public function getColoredPrints(){
+
+        $requests = Requests::where('status', 2)->where('colored', 1)->get();
+        $counterColoredPrints = 0;
+
+        foreach ($requests as $request) {
+            $counterColoredPrints += $request->quantity;
+        }
+
+        return $counterColoredPrints;
+    }
+
+    public function getBlackAndWhitePrints(){
+        $requests = Requests::where('status', 2)->where('colored', 0)->get();
+        $counterBlackAndWhite = 0;
+
+        foreach ($requests as $request) {
+            $counterBlackAndWhite += $request->quantity;
+        }
+
+        return $counterBlackAndWhite;
+    }
+
+
+    public function totalPrints(){
+        $requests = Requests::where('status', 2)->get();
+        $totalPrints = 0;
+
+        foreach ($requests as $request) {
+            $totalPrints += $request->quantity;
+        }
+
+        return $totalPrints;
+    }
+
+    public function diaryPrints(){
+        $today = Date("Y-m-d");
+        $requests = Requests::where('status', 2)->where('closed_date', $today)->get();
+        $todayPrints = 0; 
+
+        foreach ($requests as $request) {
+            $todayPrints += $requests->quantity;
+        }
+
+        return $todayPrints;
+    }
+
+
+
+    public function averageDiaryActualMouth(){      
+        $today = Date("Y-m");
+        $requests = Requests::where('status', 2)->where('closed_date', $today)->get();
+        $averagePrints = 0;
+
+        foreach ($requests as $request) {
+
+            $averagePrints += $requests->quantity;
+        }
+        $averagePrints = $averagePrints / Date("d");
+
+        return $averagePrints;
+    }
+
+
+    public function statistics(){
+        //Total Prints
+        dd($totalPrints);
+
+        //Percentagem Impressões Coloridas
+
+       
+        //Percentagem Impressões Preto e Branco
+
+
+        //Impressões Diárias
+
+
+        //Média Diária do Mês
+        
+    }
+
+    }
+
 }

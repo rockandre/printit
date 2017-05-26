@@ -52,12 +52,9 @@
                         <!-- Right Side Of Navbar -->
                         <ul class="nav navbar-nav navbar-right">
                             <!-- Authentication Links -->
-<<<<<<< HEAD
-                            <li><a href="{{url('users')}}">Users</a></li>
-=======
+                            <li><a href="{{ route('users.list')}}">Users</a></li>
                             <li><a href="{{ route('requests.list') }}">Pedidos de Impressão</a></li>
                             <li><a href="{{ route('users.blocked') }}">Utilizadores Bloqueados</a></li>
->>>>>>> b7803b7ca664097e7c9cd3e1d65af11881237da7
                             @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
@@ -97,9 +94,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-<<<<<<< HEAD
-=======
-
     <!-- Date Picker -->
       <script src="//code.jquery.com/jquery-1.10.2.js"></script>
       <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -110,7 +104,5 @@
       });
       </script>
 
-
->>>>>>> b7803b7ca664097e7c9cd3e1d65af11881237da7
 </body>
 </html>

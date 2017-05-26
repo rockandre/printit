@@ -9,7 +9,7 @@
 	<div class="panel-body">
 		<div class="col-sm-3">  
 			@if($user->profile_photo)
-			<img src="{{asset('/img/profiles/'.$user->profile_photo)}}" height="190" width="190"> 
+			<img src="{{ route('profile.image', $user->profile_photo) }}" height="190" width="190"> 
 			@else
 			<img src="{{asset('/img/profiles/male.jpg')}}" height="190" width="190">
 			@endif  

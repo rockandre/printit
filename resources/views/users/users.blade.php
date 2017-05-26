@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<script type='text/javascript' defer src="{{ asset('js/sortable.js') }}"></script>
-<div class="table-responsive">
-  <table style="width:60%" class="table table sortable"  align="center">
+<link rel="stylesheet" href="{{ URL::asset('css/users.css') }}" />
+<div>
+  <h1>Utilizadores</h1>
+  <table class="table table-striped">
     <tr>
       <th>Image</th>
       <th>Name</th>
@@ -15,7 +16,7 @@
     <tr>
      @if($user->profile_photo)
      <td>
-      <img src="{{asset('/img/profiles/'.$user->profile_photo)}}" height="30" width="30"> 
+      <img src="{{ route('profile.image', $user->profile_photo)}}" height="30" width="30"> 
     </td>
     @else
     <td>
@@ -26,7 +27,7 @@
     <td>{{$user->email}}</td>
     <td>
       @if($user->phone)
-        {{$user->phone}}
+      {{$user->phone}}
       @else
       -
       @endif
@@ -35,6 +36,7 @@
   </tr>
   @endforeach
 </table>
-{{$users->links()}}
-@endsection
+<div class="alignCenter">
+  {{$users->links()}}
 </div>
+@endsection

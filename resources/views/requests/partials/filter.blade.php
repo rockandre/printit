@@ -2,7 +2,6 @@
 
 <div class="container">
   <div class="row">
-
     <table class="table">
       <thead>
         <tr class="filters">
@@ -29,12 +28,11 @@
             <select id="estado" name="estado" class="form-control">
               <option value="-1" selected>-- Todos --</option>
               <option value="0">Pendente</option>
-              <option value="1">Recusado</option>
               <option value="2">Concluido</option>
             </select>
           </th>
           <th>Date
-            <input id="due_date" type="text" class="form-control" name="due_date">
+            <input id="date" type="text" class="form-control" name="date">
           </th>
           <th>
             <button type="submit" class="btn btn-primary">

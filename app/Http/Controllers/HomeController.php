@@ -26,11 +26,4 @@ class HomeController extends Controller
     {
         return view('home');
     }
-
-    public function users(){
-        //Mostrar
-        $users = User::all();
-        
-        return view('users.users', compact('users'));
-    }
 }

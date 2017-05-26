@@ -40,7 +40,7 @@ Route::get('/requests/{orderParam?}/{orderType?}', 'RequestController@orderBy')-
 
 
 // Routes admin
-Route::get('/users/blocked', 'UserController@showBlockedUsers')->name('users.blocked');
+Route::get('/users/blocked', 'UserController@showBlockedUsers')->name('users.blocked')->middleware('admin');
 Route::post('/user/unlock/{id}', 'UserController@unlockUser')->name('unlock.user');
 //Route::get('/admin/comments', 'AdministratorController@showComments')->name('comments.admin');
 

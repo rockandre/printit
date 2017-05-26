@@ -16,7 +16,6 @@
             <strong>Erro!</strong> Não foram encontrados resultados para a sua pesquisa.
         </div>
         
-    
     @else
     <table class="table table-striped">
         <thead>
@@ -43,7 +42,7 @@
                     </ul>
 
                 </td>
-                <td>{{ $request->due_date }}</td>
+                <td>{{ $request->created_at }}</td>
                 <td>
                     <div class="inline">
                         <a href="{{ route('show.request', $request->id) }}" class="btn btn-sm btn-primary">Detalhes</a>

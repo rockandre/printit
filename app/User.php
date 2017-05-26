@@ -43,6 +43,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function isAdmin()
+    {
+        return $this->admin == 1;
+    }
+
 
     public function comments()
     {

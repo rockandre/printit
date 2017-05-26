@@ -16,7 +16,6 @@
 
     <!-- DatePicker -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-
     <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
@@ -53,8 +52,8 @@
                         <!-- Right Side Of Navbar -->
                         <ul class="nav navbar-nav navbar-right">
                             <!-- Authentication Links -->
-                            
                             @if (Auth::guest())
+                            <li><a href="{{ route('users.list')}}">Users</a></li>
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                             @else
@@ -95,6 +94,7 @@
             </div>
         </div>
 
+<<<<<<< HEAD
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}"></script>
 
@@ -107,7 +107,19 @@
             
         });
     </script>
-
+=======
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+    <!-- Date Picker -->
+      <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+      <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+      <script>
+      $(function() {
+        $( "#date" ).datepicker({ dateFormat: 'dd-mm-yy' });
+        
+      });
+      </script>
+>>>>>>> 5c564d8f6e7c6997eee676c99c5a9f644507da4b
 
 </body>
 </html>

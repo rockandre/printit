@@ -48,7 +48,6 @@ class User extends Authenticatable
         return $this->admin == 1;
     }
 
-
     public function comments()
     {
         return $this->hasMany('App\Comment');

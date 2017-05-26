@@ -51,7 +51,7 @@ class User extends Authenticatable
 
     public function requests()
     {
-        return $this->hasMany('App\Request');
+        return $this->hasMany('App\Request', 'owner_id');
     }
 
     public function department()

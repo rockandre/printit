@@ -6,15 +6,56 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Request as Requests;
 use App\Printer;
+use App\User;
+use App\Department;
+use Illuminate\Support\Facades\DB;
 
 class RequestController extends Controller
 {
 	public function listRequests()
 	{
 		$requests = Requests::paginate(10);
-
-		return view('requests.list', compact('requests'));
+        $funcionarios = User::all();
+        $departamentos = Department::all();
+		return view('requests.list', compact('requests', 'funcionarios', 'departamentos'));
 	}
+
+    public function filter(Request $filter)
+    {
+        $requests = null;
+        $description = $filter['description'];
+        $user_id = $filter['user_id'];
+        $department_id = $filter['department_id'];
+        $status= $filter['estado'];
+        $date = $filter['due_date'];
+
+        $requests = new Requests();
+        if($user_id != -1) {
+            $requests = $requests->where('owner_id', $user_id);
+        }
+
+        if($status != -1) {
+            $requests = $requests->where('status', $status);
+        }
+
+        if($department_id != -1) {
+            $requests = $requests
+            ->join('users', 'requests.owner_id', '=', 'users.id')->where('users.department_id', $department_id)->select('requests.*');
+        }
+
+        if(!is_null($description) && !empty($description))
+        {
+            $requests = $requests->where('description', 'like', '%' . $description . '%');
+        }
+        //Falta a data
+
+        $requests = $requests->paginate(10);
+        
+        $funcionarios = User::all();
+        $departamentos = Department::all();
+        return view('requests.list', compact('requests', 'funcionarios', 'departamentos'));
+
+    }
 
     public function refuseRequest($id)
     {

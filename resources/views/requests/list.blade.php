@@ -5,6 +5,19 @@
 <div>
     <h1>Pedidos de Impressão</h1>
 
+    <div>
+        <form class="form-vertical" role="form" method="POST" action="{{ route('request.filter') }}">
+            @include('requests.partials.filter')
+        </form>
+        
+    </div>
+    @if(count($requests) == 0)
+        <div class="alert alert-danger">
+            <strong>Erro!</strong> Não foram encontrados resultados para a sua pesquisa.
+        </div>
+        
+    
+    @else
     <table class="table table-striped">
         <thead>
             <tr>
@@ -56,5 +69,6 @@
     <div class="alignCenter">
         {{ $requests->links() }}
     </div>
+    @endif
 </div>
 @endsection

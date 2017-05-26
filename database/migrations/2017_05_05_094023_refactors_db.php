@@ -40,6 +40,7 @@ class RefactorsDb extends Migration
             $table->string('profile_photo')->nullable();
             $table->string('profile_url')->nullable();
             $table->string('presentation')->nullable();
+            $table->string('email_token')->nullable();
 
             // Non-normalized fields to handle statistics
             // They are maintained by the application layer
@@ -111,10 +112,10 @@ class RefactorsDb extends Migration
             $table->timestamps();
 
             $table->integer('request_id')->unsigned();
-            $table->foreign('request_id')->references('id')->on('requests');
+            $table->foreign('request_id')->references('id')->on('requests')->onDelete('cascade');
 
             $table->integer('parent_id')->unsigned()->nullable();
-            $table->foreign('parent_id')->references('id')->on('comments');
+            $table->foreign('parent_id')->references('id')->on('comments')->onDelete('cascade');
 
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');

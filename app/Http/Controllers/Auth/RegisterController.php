@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
+use Illuminate\Http\Request;
+use Mail;
+use App\Mail\MailConfirmation;
+
 class RegisterController extends Controller
 {
     /*
@@ -51,6 +55,12 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'phone' => 'required|string|size:9',
+            'department_id' => 'required|exists:departments,id'
+            /*,
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg',
+            'profile_url' => 'nullable|URL',
+            'presentation' => 'nullable|string|max:3000'*/
         ]);
     }
 
@@ -66,6 +76,50 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'phone' => $data['phone'],
+            'department_id' => $data['department_id']
         ]);
+    }
+
+    protected function register(Request $request)
+    {
+        $input = $request->all();
+        $validator = $this->validator($input);
+
+        if($validator->passes()) {
+            $data = $this->create($input)->toArray();
+
+
+            $data['email_token'] = str_random(25);
+
+            $user = User::find($data['id']);
+            $user->email_token = $data['email_token'];
+            $user->save();
+
+            Mail::to($user)->send(new MailConfirmation($user));
+            /*
+            Mail::send('mails.confirmation', $data, function($message) use($data){
+                $message->to($data['email']);
+                $message->subject('Registration Confirmation');
+            });
+    */
+            return redirect(route('login'))->with('status', 'Confirmation email has been send. Please check your email!');
+        }
+
+        return redirect(route('login'))->with('status', $validator->errors());
+
+    }
+
+    public function confirmation($token)
+    {
+        $user = User::where('email_token', $token)->first();
+
+        if(!is_null($user)) {
+            $user->activated = 1;
+            $user->email_token = 'ACTIVATED';
+            $user->save();
+            return redirect(route('login'))->with('status', 'Your activation is completed!');
+        }
+        return redirect(route('login'))->with('status', 'Something went wrong.');
     }
 }

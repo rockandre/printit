@@ -12,7 +12,10 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <!-- DatePicker -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
     <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
@@ -35,8 +38,8 @@
                         </button>
 
                         <!-- Branding Image -->
-                        <a class="navbar-brand" href="{{ url('/') }}">
-                            {{ config('app.name', 'Laravel') }}
+                        <a class="navbar-brand" href="{{ route('home') }}">
+                            {{ config('app.name', 'Print It') }}
                         </a>
                     </div>
 
@@ -49,7 +52,12 @@
                         <!-- Right Side Of Navbar -->
                         <ul class="nav navbar-nav navbar-right">
                             <!-- Authentication Links -->
+<<<<<<< HEAD
                             <li><a href="{{url('users')}}">Users</a></li>
+=======
+                            <li><a href="{{ route('requests.list') }}">Pedidos de Impressão</a></li>
+                            <li><a href="{{ route('users.blocked') }}">Utilizadores Bloqueados</a></li>
+>>>>>>> b7803b7ca664097e7c9cd3e1d65af11881237da7
                             @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
@@ -60,6 +68,10 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{{ route('request.create') }}">
+                                        Criar pedido
+                                    </a>
                                     <li>
                                         <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
@@ -85,5 +97,20 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+<<<<<<< HEAD
+=======
+
+    <!-- Date Picker -->
+      <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+      <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+      <script>
+      $(function() {
+        $( "#due_date" ).datepicker({ dateFormat: 'dd-mm-yy' });
+        
+      });
+      </script>
+
+
+>>>>>>> b7803b7ca664097e7c9cd3e1d65af11881237da7
 </body>
 </html>

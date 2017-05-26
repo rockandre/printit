@@ -31,7 +31,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'profile_photo', 'profile_url', 'presentation', 'print_evals', 'prints_counts', 'admin', 'blocked', 'activated', 
+        'name', 'email', 'password', 'phone', 'department_id', 'profile_photo', 'profile_url', 'presentation', 'print_evals', 'prints_counts', 'admin', 'blocked', 'activated', 
     ];
 
     /**
@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function requests()
     {
-        return $this->hasMany('App\Request');
+        return $this->hasMany('App\Request', 'owner_id');
     }
 
     public function department()

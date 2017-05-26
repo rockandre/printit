@@ -30,7 +30,9 @@ class CommentsTableSeeder extends Seeder
         $this->command->info('Creating '.$this->numberOfMultiLevelComments.' multilevel comments...');
         for ($i = 0; $i < $this->numberOfMultiLevelComments; ++$i) {
             $comment = $this->fakeComment($faker, $faker->randomElement($requests), $faker->randomElement($users));
-            $comment['parent_id'] = $faker->randomElement(DB::table('comments')->where('parent_id', null)->pluck('id')->toArray());
+            $parent = DB::table('comments')->where('parent_id', null)->get()->random();
+            $comment['parent_id'] = $parent->id;
+            $comment['request_id'] = $parent->request_id;
             DB::table('comments')->insert($comment);
         }
     }

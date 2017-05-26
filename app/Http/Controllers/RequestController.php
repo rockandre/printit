@@ -9,6 +9,7 @@ use App\Printer;
 use App\User;
 use App\Department;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class RequestController extends Controller
 {
@@ -17,8 +18,8 @@ class RequestController extends Controller
 		$requests = Requests::paginate(10);
         $funcionarios = User::all();
         $departamentos = Department::all();
-		return view('requests.list', compact('requests', 'funcionarios', 'departamentos'));
-	}
+        return view('requests.list', compact('requests', 'funcionarios', 'departamentos'));
+    }
 
     public function filter(Request $filter)
     {
@@ -27,8 +28,8 @@ class RequestController extends Controller
         $user_id = $filter['user_id'];
         $department_id = $filter['department_id'];
         $status= $filter['estado'];
-        $date = $filter['due_date'];
-
+        $date = $filter['date'];
+        //echo $date;
         $requests = new Requests();
         if($user_id != -1) {
             $requests = $requests->where('owner_id', $user_id);
@@ -43,11 +44,16 @@ class RequestController extends Controller
             ->join('users', 'requests.owner_id', '=', 'users.id')->where('users.department_id', $department_id)->select('requests.*');
         }
 
-        if(!is_null($description) && !empty($description))
-        {
+        if(!is_null($description) && !empty($description)) {
             $requests = $requests->where('description', 'like', '%' . $description . '%');
         }
-        //Falta a data
+
+        if(!is_null($date) && !empty($date)){
+            $date = Carbon::createFromFormat('d-m-Y', $date);
+            $requests = $requests->whereDay('created_at', '=', $date->format('d'))
+            ->whereMonth('created_at', '=', $date->format('m'))
+            ->whereYear('created_at', '=', $date->format('Y'));
+        }
 
         $requests = $requests->paginate(10);
         
@@ -90,15 +96,26 @@ class RequestController extends Controller
     {
     	$requestToUpdate = Requests::findOrFail($id);
 
+        
+
+        //return $user;
+
     	$requestToUpdate->status = 2;
 
     	$requestToUpdate->printer_id = $request['printerused'];
 
     	$requestToUpdate->closed_user_id = Auth::user()->id;
 
-    	$requestToUpdate->save();
+        $requestToUpdate->closed_date = Carbon::now();
 
-    	return redirect()->route('requests.list')->with('success', 'Pedido concluido com sucesso!');
+        $requestToUpdate->user->print_counts += $requestToUpdate->quantity;
+
+        $requestToUpdate->save();
+        $requestToUpdate->user->save();
+
+        
+
+        return redirect()->route('requests.list')->with('success', 'Pedido concluido com sucesso!');
     }
 
     public function deleteRequest(Requests $request)
@@ -145,12 +162,12 @@ class RequestController extends Controller
             'paper_type' => 'required|in:0,1,2',
             'file' => 'required|mimes:jpeg,bmp,png,tiff,doc,xlsx,pdf,pptx,odt',
 
-        ]);
+            ]);
 
         $date = $request->due_date;
         $due_date = null;
         if(!is_null($date)){
-            $due_date = \Carbon\Carbon::createFromFormat('d-m-Y', $date)->toDateString();
+            $due_date = Carbon::createFromFormat('d-m-Y', $date)->toDateString();
         }
 
         $fileName = null;
@@ -162,20 +179,20 @@ class RequestController extends Controller
         
         $user = Auth::id();
         Requests::create([
-                'status' => 0,
-                'description' => request('description'),
-                'due_date' => $due_date,
-                'quantity' => request('quantity'),
-                'colored' => request('colored'),
-                'stapled' => request('stapled'),
-                'front_back' => request('front_back'),
-                'paper_size' => request('paper_size'),
-                'paper_type' => request('paper_type'),
-                'file' => $fileName,
-                'owner_id' => $user
-        ]);
+            'status' => 0,
+            'description' => request('description'),
+            'due_date' => $due_date,
+            'quantity' => request('quantity'),
+            'colored' => request('colored'),
+            'stapled' => request('stapled'),
+            'front_back' => request('front_back'),
+            'paper_size' => request('paper_size'),
+            'paper_type' => request('paper_type'),
+            'file' => $fileName,
+            'owner_id' => $user
+            ]);
 
-        return redirect()->route('requests.show');
+        return redirect()->route('requests.list');
     }
 
     public function edit(Requests $request)
@@ -196,7 +213,7 @@ class RequestController extends Controller
             'paper_type' => 'required|in:0,1,2',
             'file' => 'required|mimes:jpeg,bmp,png,tiff,doc,xlsx,pdf,pptx,odt',
 
-        ]);
+            ]);
 
         $date = $request->due_date;
         $due_date = null;

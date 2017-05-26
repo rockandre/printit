@@ -18,3 +18,15 @@
 #radio {
 	padding-top: 8px;
 }
+
+#searchNav {
+  height: 100px;
+  width: 100%;
+}
+#searchLi {
+  display: inline;
+  list-style: none;
+}
+#searchForm {
+  display: inline;
+}

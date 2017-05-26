@@ -22,6 +22,8 @@ Route::post('request/create', 'RequestController@store')->name('request.create')
 Route::get('request/edit/{request}', 'RequestController@edit')->name('request.edit');
 Route::post('request/edit/{requestToUpdate}', 'RequestController@update')->name('request.update');
 
+Route::post('requests', 'RequestController@filter')->name('request.filter');
+
 // Routes requests
 Route::get('/requests', 'RequestController@listRequests')->name('requests.list');
 Route::delete('/request/delete/{request}', 'RequestController@deleteRequest')->name('delete.request');

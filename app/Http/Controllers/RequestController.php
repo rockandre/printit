@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Request as Requests;
 use App\Printer;
-use Illuminate\Support\Facades\Auth;
 
 class RequestController extends Controller
 {

@@ -21,7 +21,8 @@
                 <td>
                     <div class="inline">
                         <a class="btn btn-sm btn-primary" href="#">Ver Perfil</a>
-                        <form action="{{ route('unlock.user', $user) }}" method="post" class="inline">
+                        <form action="{{ route('unlock.user', $user->id) }}" method="post" class="inline">
+                            {{ csrf_field() }}
                             <button type="submit" class="btn btn-sm btn-danger">Desbloquear</button>
                         </form>
                     </div>

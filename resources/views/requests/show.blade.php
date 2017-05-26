@@ -18,7 +18,10 @@
 			<p><b>Telefone: </b>{{ $request->user->phone }}</p>
 		</div>
 		<div class="col-md-9">
-			<h2>Pedido de Impressão</h2>
+			<div class="inline">
+				<h2>Pedido de Impressão</h2>
+				<button class="btn btn-sm btn-primary">Editar</button>
+			</div>
 			<br>
 			<p><b>Data do Pedido: </b>{{ $request->created_at }}</p>
 			<p><b>Estado do Pedido: </b>{{ $request->statusToStr() }}</p>

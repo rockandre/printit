@@ -14,8 +14,10 @@ class UserController extends Controller
     	return view('admin.list-blocked-users', compact('blockedUsers'));
     }
 
-    public function unlockUser(User $user)
+    public function unlockUser($id)
     {
+    	$user = User::findOrFail($id);
+
     	$user->blocked = 0;
 
     	$user->save();

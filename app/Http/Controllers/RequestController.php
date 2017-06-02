@@ -15,27 +15,57 @@ class RequestController extends Controller
 {
     public function listRequests()
     {
+        $requests = Requests::leftJoin('users', 'requests.owner_id', '=', 'users.id')
+        ->leftJoin('departments', 'users.department_id', '=', 'departments.id')
+        ->select('requests.*', 'users.name', 'departments.name');
+
+        $queries = [];
+
+        if (request()->has('orderByParam')) {
+
+            if (request('orderByParam') == 'requestType') {
+                $requests = $requests->orderBy('paper_size', request('orderByType'))
+                                     ->orderBy('paper_type', request('orderByType'))
+                                     ->orderBy('colored', request('orderByType'));
+                $queries['orderByParam'] = request('orderByParam');
+                $queries['orderByType'] = request('orderByType');
+            }
+            else {
+                $requests = $requests->orderBy(request('orderByParam'), request('orderByType'));
+                $queries['orderByParam'] = request('orderByParam');
+                $queries['orderByType'] = request('orderByType');
+            }
+        } else {
+            $requests = $requests->orderBy('users.name', 'asc');
+        }
+
         if(Auth::user()->isAdmin())
         {
-            $requests = Requests::paginate(10);
+            $requests = $requests->paginate(10)->appends($queries);
         } else {
-            $requests = Requests::where('owner_id', Auth::user()->id)->paginate(10);
+            $requests = $requests->where('requests.owner_id', Auth::user()->id)->paginate(10)->appends($queries);
         }
-        $funcionarios = User::all();
-        $departamentos = Department::all();
-        return view('requests.list', compact('requests', 'funcionarios', 'departamentos'));
+
+        $users = User::all();
+        $departments = Department::all();
+
+        return view('requests.list', compact('requests', 'users', 'departments'));
     }
 
-    public function filter(Request $filter)
+    public function filterRequests(Request $filter)
     {
-        $requests = null;
         $description = $filter['description'];
         $user_id = $filter['user_id'];
         $department_id = $filter['department_id'];
         $status= $filter['estado'];
         $date = $filter['date'];
 
-        $requests = new Requests();
+        if(Auth::user()->isAdmin())
+        {
+            $requests = Requests::select('*');
+        } else {
+            $requests = Requests::where('owner_id', Auth::user()->id);
+        }
         if($user_id != -1) {
             $requests = $requests->where('owner_id', $user_id);
         }
@@ -65,7 +95,6 @@ class RequestController extends Controller
         $funcionarios = User::all();
         $departamentos = Department::all();
         return view('requests.list', compact('requests', 'funcionarios', 'departamentos'));
-
     }
 
     public function refuseRequest($id)
@@ -113,8 +142,6 @@ class RequestController extends Controller
 
         $requestToUpdate->save();
         $requestToUpdate->user->save();
-
-
 
         return redirect()->route('requests.list')->with('success', 'Pedido concluido com sucesso!');
     }

@@ -52,38 +52,38 @@
                         <!-- Right Side Of Navbar -->
                         <ul class="nav navbar-nav navbar-right">
                             <!-- Authentication Links -->
+                            <li><a href="{{ route('users.list')}}">Contactos</a></li>
                             @if (Auth::guest())
-                            <li><a href="{{ route('users.list')}}">Users</a></li>
                             <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
+                            <li><a href="{{ route('register') }}">Registar</a></li>
                             @else
-                                @if (Auth::user()->isAdmin())
-                                <li><a href="{{ route('users.blocked') }}">Utilizadores Bloqueados</a></li>
-                                @endif()
-                                <li><a href="{{ route('requests.list') }}">Pedidos de Impressão</a></li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                        {{ Auth::user()->name }} <span class="caret"></span>
-                                    </a>
+                            @if (Auth::user()->isAdmin())
+                            <li><a href="{{ route('users.blocked') }}">Utilizadores Bloqueados</a></li>
+                            @endif()
+                            <li><a href="{{ route('requests.list') }}">Pedidos de Impressão</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                </a>
 
-                                    <ul class="dropdown-menu" role="menu">
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{{ route('request.create') }}">
+                                            Criar pedido
+                                        </a>
                                         <li>
-                                            <a href="{{ route('request.create') }}">
-                                                Criar pedido
-                                            </a>
-                                            <li>
-                                                <a href="{{ route('logout') }}"
-                                                onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();">
-                                                Logout
-                                            </a>
+                                            <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
 
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                                {{ csrf_field() }}
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </li>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
                             @endif
                         </ul>
                     </div>
@@ -93,33 +93,16 @@
                 @yield('content')
             </div>
         </div>
-
-<<<<<<< HEAD
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}"></script>
-
         <!-- Date Picker -->
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
         <script>
           $(function() {
             $( "#date" ).datepicker({ dateFormat: 'dd-mm-yy' });
-            
-        });
-    </script>
-=======
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-    <!-- Date Picker -->
-      <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-      <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-      <script>
-      $(function() {
-        $( "#date" ).datepicker({ dateFormat: 'dd-mm-yy' });
-        
-      });
-      </script>
->>>>>>> 5c564d8f6e7c6997eee676c99c5a9f644507da4b
 
-</body>
+        });
+        </script>
+    </body>
 </html>

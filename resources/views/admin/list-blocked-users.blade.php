@@ -20,10 +20,10 @@
                 <td>{{$user->phone}}</td>
                 <td>
                     <div class="inline">
-                        <a class="btn btn-sm btn-primary" href="#">Ver Perfil</a>
+                        <a href="{{ route ('user.show', $user->id)}}" class="btn btn-sm btn-primary">Ver Perfil</a>
                         <form action="{{ route('unlock.user', $user->id) }}" method="post" class="inline">
                             {{ csrf_field() }}
-                            <button type="submit" class="btn btn-sm btn-danger">Desbloquear</button>
+                            <button type="submit" class="btn btn-sm btn-success">Desbloquear</button>
                         </form>
                     </div>
                 </td>

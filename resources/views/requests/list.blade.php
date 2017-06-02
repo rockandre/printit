@@ -6,25 +6,40 @@
     <h1>Pedidos de Impressão</h1>
 
     <div>
-        <form class="form-vertical" role="form" method="POST" action="{{ route('request.filter') }}">
+        <form class="form-vertical" role="form" method="get" action="{{ route('requests.list', ['description' => request('description'), 'user' => request('user_id')]) }}">
             @include('requests.partials.filter')
         </form>
         
     </div>
     @if(count($requests) == 0)
         <div class="alert alert-danger">
-            <strong>Erro!</strong> Não foram encontrados resultados para a sua pesquisa.
+            <strong>Erro!</strong> Não foram encontrados Pedidos de Impressão!
         </div>
         
     @else
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Funcionário</th>
-                <th>Departamento</th>
-                <th>Estado</th>
-                <th>Tipo de Impressão</th>
-                <th>Data do Pedido</th>
+                <th>Funcionário
+                    <a href="{{ route('requests.list', ['orderByParam' => 'users.name', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['orderByParam' => 'users.name', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                </th>
+                <th>Departamento
+                    <a href="{{ route('requests.list', ['orderByParam' => 'departments.name', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['orderByParam' => 'departments.name', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                </th>
+                <th>Estado
+                    <a href="{{ route('requests.list', ['orderByParam' => 'status', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['orderByParam' => 'status', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                </th>
+                <th>Tipo de Impressão
+                    <a href="{{ route('requests.list', ['orderByParam' => 'requestType', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['orderByParam' => 'requestType', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                </th>
+                <th>Data do Pedido
+                    <a href="{{ route('requests.list', ['orderByParam' => 'requests.created_at', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['orderByParam' => 'requests.created_at', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                </th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -42,14 +57,10 @@
                     </ul>
 
                 </td>
-                <td>{{ $request->created_at->format('d-m-Y')   }}</td>
+                <td>{{ $request->created_at->format('d-m-Y') }}</td>
                 <td>
                     <div class="inline">
                         <a href="{{ route('show.request', $request->id) }}" class="btn btn-sm btn-primary">Detalhes</a>
-                        @if($request->status == '0')
-                        <a href="{{ route('finish.request', $request->id) }}" class="btn btn-sm btn-success">Concluir</a>
-                        <a href="{{ route('refuse.request', $request->id) }}" class="btn btn-sm btn-warning">Recusar</a>
-                        @endif
                         @if($request->user->id == Auth::user()->id)
                         <form action="{{route('delete.request', $request)}}" method="post" class="inline">
                             {{ method_field('DELETE') }}

@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Request as Requests;
+use App\User;
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -30,11 +31,20 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerUserPolicies()
     {
-        Gate::define('administrator', function($user){
-            return $user->isAdmin();
+        Gate::define('edit-remove-request', function($user, Requests $request){
+            return ($user->id == $request->owner_id) && $request->status != 2;
         });
-        Gate::define('requestOwner', function($user, Requests $request){
-            return $user->id == $request->owner_id;
+
+        Gate::define('refuse-finish-request', function($user, Requests $request){
+            return $user->isAdmin()  && $request->status == 0;
+        });
+
+        Gate::define('evaluate-request', function($user, Requests $request){
+            return ($user->id == $request->owner_id) && $request->status == 2;
+        });
+
+        Gate::define('block-user', function($loggedUser, User $user){
+            return $loggedUser->isAdmin() && $user->blocked == 0;
         });
     }
 }

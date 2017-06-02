@@ -20,21 +20,22 @@
 		<div class="col-md-9">
 			<div class="inline">
 				<h2>Pedido de Impressão</h2>
-				@if ($request->status != 2 && Auth::user()->id == $request->user->id)
+				@can('edit-remove-request', $request)
 				<a href="#" class="btn btn-sm btn-primary">Editar</a>
-				@endif
-				@if (Auth::user()->isAdmin() && $request->status == '0')
+				@endcan
+				@can('refuse-finish-request', $request)
                     <a href="{{ route('finish.request', $request->id) }}" class="btn btn-sm btn-success">Concluir</a>
                     <a href="{{ route('refuse.request', $request->id) }}" class="btn btn-sm btn-warning">Recusar</a>
-				@endif
+				@endcan
 			</div>
 			<br>
 			<p><b>Data do Pedido: </b>{{ $request->created_at }}</p>
 			<p><b>Estado do Pedido: </b>{{ $request->statusToStr() }}</p>
 			@if ($request->status == 2)
-			<p><b>Avaliação do Pedido: </b></p>
 			<div class="col-md-12">
 				@if ( empty($request->satisfaction_grade) || $request->satisfaction_grade == 0)
+				@can('evaluate-request', $request)
+				<p><b>Avaliar Pedido: </b></p>
 				<form class="form-horizontal" role="form" method="POST" action="{{ route('evaluate.request', $request->id) }}">
 					{{ csrf_field() }}
 					<fieldset class="rating" id="rating">
@@ -44,7 +45,9 @@
 					</fieldset>
 					<button type="submit" class="btn btn-sm btn-info">Avaliar</button>
 				</form>
+				@endcan
 				@else 
+				<p><b>Avaliação do Pedido: </b></p>
 				<fieldset class="rating" disabled>
 					<input type="radio" id="star3" name="rating" value="3" {{($request->satisfaction_grade == 3) ? 'checked' : ''}} /><label class = "full" for="star3" title="Boa - 3 estrelas"></label>
 					<input type="radio" id="star2" name="rating" value="2" {{($request->satisfaction_grade == 2) ? 'checked' : ''}} /><label class = "full" for="star2" title="Razoável - 2 estrelas"></label>

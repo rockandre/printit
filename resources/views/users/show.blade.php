@@ -14,12 +14,12 @@
 			@endif
 			<div>
 				<h1>Informação Pessoal</h1>
-				@if(Auth::user()->isAdmin() && $user->blocked == 0)
+				@can('block-user', $user)
 					<form action="{{ route('block.user', $user->id) }}" method="post" class="inline">
                         {{ csrf_field() }}
                         <button type="submit" class="btn btn-sm btn-danger">Bloquear</button>
                     </form>
-				@endif
+				@endcan
 			</div>
 			<br>
 			<div class="row">

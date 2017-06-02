@@ -20,7 +20,13 @@
 		<div class="col-md-9">
 			<div class="inline">
 				<h2>Pedido de Impressão</h2>
-				<button class="btn btn-sm btn-primary">Editar</button>
+				@if ($request->status != 2 && Auth::user()->id == $request->user->id)
+				<a href="#" class="btn btn-sm btn-primary">Editar</a>
+				@endif
+				@if (Auth::user()->isAdmin() && $request->status == '0')
+                    <a href="{{ route('finish.request', $request->id) }}" class="btn btn-sm btn-success">Concluir</a>
+                    <a href="{{ route('refuse.request', $request->id) }}" class="btn btn-sm btn-warning">Recusar</a>
+				@endif
 			</div>
 			<br>
 			<p><b>Data do Pedido: </b>{{ $request->created_at }}</p>

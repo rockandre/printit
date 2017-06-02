@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Auth;
 
 class LoginController extends Controller
 {
@@ -35,5 +37,21 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->blocked == 1 || $user->activated == 0)
+        {
+            Auth::logout();
+
+            if ($user->ativated == 0) {
+                return redirect()->route('login')->with('status', 'Conta não se encontra ativada!');
+            } else {
+                return redirect()->route('login')->with('status', 'Conta bloqueada!');
+            }
+        }
+
+        return redirect()->route('home');
     }
 }

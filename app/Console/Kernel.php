@@ -37,4 +37,10 @@ class Kernel extends ConsoleKernel
     {
         require base_path('routes/console.php');
     }
+
+     public function registerBundles()
+    {
+        $bundles = array(
+            new Khill\Lavacharts\Symfony\Bundle\LavachartsBundle(),
+    );
 }

@@ -11,15 +11,12 @@ class UserController extends Controller
 		$user = User::findOrFail($id);
 		return view('users.showUser', compact('user'));
 	}	
-
+r
 	public function users(){
 		$users = User::orderBy('name', 'asc')->paginate(10);
 		return view('users.users', compact('users'));
 	}
 
-	public function statistics(){
-		return view('statistics.show');
-	}
 
     public function showBlockedUsers()
     {
@@ -37,6 +34,8 @@ class UserController extends Controller
     	$user->save();
 
         return redirect()->route('users.blocked')->with('success', 'Utilizador desbloqueado com sucesso!');
+    }
+    
     }
 }
 

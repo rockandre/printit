@@ -13,24 +13,59 @@ use Carbon\Carbon;
 
 class RequestController extends Controller
 {
-	public function listRequests()
-	{
-		$requests = Requests::paginate(10);
-        $funcionarios = User::all();
-        $departamentos = Department::all();
-        return view('requests.list', compact('requests', 'funcionarios', 'departamentos'));
+    public function listRequests()
+    {
+        $requests = Requests::leftJoin('users', 'requests.owner_id', '=', 'users.id')
+        ->leftJoin('departments', 'users.department_id', '=', 'departments.id')
+        ->select('requests.*', 'users.name', 'departments.name');
+
+        $queries = [];
+
+        if (request()->has('orderByParam')) {
+
+            if (request('orderByParam') == 'requestType') {
+                $requests = $requests->orderBy('paper_size', request('orderByType'))
+                                     ->orderBy('paper_type', request('orderByType'))
+                                     ->orderBy('colored', request('orderByType'));
+                $queries['orderByParam'] = request('orderByParam');
+                $queries['orderByType'] = request('orderByType');
+            }
+            else {
+                $requests = $requests->orderBy(request('orderByParam'), request('orderByType'));
+                $queries['orderByParam'] = request('orderByParam');
+                $queries['orderByType'] = request('orderByType');
+            }
+        } else {
+            $requests = $requests->orderBy('users.name', 'asc');
+        }
+
+        if(Auth::user()->isAdmin())
+        {
+            $requests = $requests->paginate(10)->appends($queries);
+        } else {
+            $requests = $requests->where('requests.owner_id', Auth::user()->id)->paginate(10)->appends($queries);
+        }
+
+        $users = User::all();
+        $departments = Department::all();
+
+        return view('requests.list', compact('requests', 'users', 'departments'));
     }
 
-    public function filter(Request $filter)
+    public function filterRequests(Request $filter)
     {
-        $requests = null;
         $description = $filter['description'];
         $user_id = $filter['user_id'];
         $department_id = $filter['department_id'];
         $status= $filter['estado'];
         $date = $filter['date'];
-        //echo $date;
-        $requests = new Requests();
+
+        if(Auth::user()->isAdmin())
+        {
+            $requests = Requests::select('*');
+        } else {
+            $requests = Requests::where('owner_id', Auth::user()->id);
+        }
         if($user_id != -1) {
             $requests = $requests->where('owner_id', $user_id);
         }
@@ -56,55 +91,50 @@ class RequestController extends Controller
         }
 
         $requests = $requests->paginate(10);
-        
+
         $funcionarios = User::all();
         $departamentos = Department::all();
         return view('requests.list', compact('requests', 'funcionarios', 'departamentos'));
-
     }
 
     public function refuseRequest($id)
     {
-    	$request = Requests::findOrFail($id);
+        $request = Requests::findOrFail($id);
 
-    	return view('requests.refuse', compact('request'));
+        return view('requests.refuse', compact('request'));
     }
 
     public function updateRefuseRequest(Request $request, $id)
     {
-    	$requestToUpdate = Requests::findOrFail($id);
+        $requestToUpdate = Requests::findOrFail($id);
 
-    	$requestToUpdate->status = 1;
+        $requestToUpdate->status = 1;
 
-    	$requestToUpdate->refused_reason = $request['refusemessage'];
+        $requestToUpdate->refused_reason = $request['refusemessage'];
 
-    	$requestToUpdate->save();
+        $requestToUpdate->save();
 
-    	return redirect()->route('requests.list')->with('success', 'Pedido recusado com sucesso!');
+        return redirect()->route('requests.list')->with('success', 'Pedido recusado com sucesso!');
     }
 
     public function finishRequest($id) 
     {
-    	$request = Requests::findOrFail($id);
+        $request = Requests::findOrFail($id);
 
-    	$printers = Printer::all();
+        $printers = Printer::all();
 
-    	return view('requests.finish', compact('request', 'printers'));
+        return view('requests.finish', compact('request', 'printers'));
     }
 
     public function updateFinishRequest(Request $request, $id)
     {
-    	$requestToUpdate = Requests::findOrFail($id);
+        $requestToUpdate = Requests::findOrFail($id);
 
-        
+        $requestToUpdate->status = 2;
 
-        //return $user;
+        $requestToUpdate->printer_id = $request['printerused'];
 
-    	$requestToUpdate->status = 2;
-
-    	$requestToUpdate->printer_id = $request['printerused'];
-
-    	$requestToUpdate->closed_user_id = Auth::user()->id;
+        $requestToUpdate->closed_user_id = Auth::user()->id;
 
         $requestToUpdate->closed_date = Carbon::now();
 
@@ -112,8 +142,6 @@ class RequestController extends Controller
 
         $requestToUpdate->save();
         $requestToUpdate->user->save();
-
-        
 
         return redirect()->route('requests.list')->with('success', 'Pedido concluido com sucesso!');
     }
@@ -176,7 +204,7 @@ class RequestController extends Controller
             $path = $file->store('print-jobs/' . auth()->id());
             $fileName = basename($path);
         }
-        
+
         $user = Auth::id();
         Requests::create([
             'status' => 0,
@@ -227,13 +255,25 @@ class RequestController extends Controller
             $path = $file->store('print-jobs/' . auth()->id());
             $fileName = basename($path);
         }
-        
+
         $requestToUpdate->fill($request->except('due_date', 'file'));
         $requestToUpdate->due_date = $due_date;
         $requestToUpdate->file = $fileName;
         $requestToUpdate->save();
-        
-        return redirect()->route('requests.show');
+
+        $fileName = null;
+        if( $request->hasFile('file') ) {
+            $file = $request->file('file');
+            $path = $file->store('print-jobs/' . auth()->id());
+            $fileName = basename($path);
+        }
+
+        $requestToUpdate->fill($request->except('due_date', 'file'));
+        $requestToUpdate->due_date = $due_date;
+        $requestToUpdate->file = $fileName;
+        $requestToUpdate->save();
+
+        return redirect()->route('requests.list');
     }
 
 

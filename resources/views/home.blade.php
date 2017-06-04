@@ -33,7 +33,7 @@
                     <tr>
                         <td>{{ $department->name }}</td>
                         <td>{{ $departmentStats[$department->id]['total'] }}</td>
-                        <td><a href="{{ route('department.stats', $department->id) }}" class="btn btn-sm btn-info">Mais Info</a></td>
+                        <td><a href="{{ route('department.stats', $department->id) }}" class="btn btn-sm btn-primary">Mais Info</a></td>
                     </tr>
                     @endforeach
                 </table>

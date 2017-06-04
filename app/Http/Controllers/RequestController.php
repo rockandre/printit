@@ -139,8 +139,10 @@ class RequestController extends Controller
     public function showRequest($id)
     {
         $request = Requests::findOrFail($id);
-
-        return view('requests.show', compact('request'));
+        if(Auth::user()->isAdmin() || Auth::user()->id == $request->owner_id){
+            return view('requests.show', compact('request'));
+        }
+        return redirect()->route('requests.list')->with('success', 'Não pode aceder a esse request!');
     }
 
     public function evaluateRequest(Request $request, $id)
@@ -157,8 +159,9 @@ class RequestController extends Controller
     public function create()
     {
         $request = new Requests();
+        $due_date = "";
         
-        return view('requests.create', compact('request'));
+        return view('requests.create', compact('request', 'due_date'));
     }
 
     public function store(Request $request)
@@ -209,7 +212,8 @@ class RequestController extends Controller
 
     public function edit(Requests $request)
     {
-        return view('requests.edit', compact('request'));
+        $due_date =  $request->created_at->format('d-m-Y');
+        return view('requests.edit', compact('request', 'due_date'));
     }
 
     public function update(Request $request, Requests $requestToUpdate)

@@ -259,9 +259,22 @@ class RequestController extends Controller
         return redirect()->route('requests.list');
     }
 
-    //Estatisticas!!
 
-    public function getColoredPrints(){
+
+    public function statistics(){
+        $statistics = [];
+        $statistics[0] = getColoredPrints();
+        $statistics[1] = getBlackAndWhitePrints();
+        $statistics[2] = totalPrints();
+        $statistics[3] = diaryPrints();
+        $statistics[4] = averageDiaryActualMouth();
+        return view('home', compact('statistics'));
+    }
+
+
+        //Statistics!!
+
+      public function getColoredPrints(){
 
         $requests = Requests::where('status', 2)->where('colored', 1)->get();
         $counterColoredPrints = 0;
@@ -323,23 +336,4 @@ class RequestController extends Controller
 
         return $averagePrints;
     }
-
-
-    public function statistics(){
-        //Total Prints
-        dd($totalPrints);
-
-        //Percentagem Impressões Coloridas
-
-
-        //Percentagem Impressões Preto e Branco
-
-
-        //Impressões Diárias
-
-
-        //Média Diária do Mês
-
-    }
-
 }

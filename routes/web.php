@@ -19,7 +19,8 @@ Route::get('/users/confirmation/{token}', 'Auth\RegisterController@confirmation'
 // ROUTES PAGINA INICIAL
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/statistics', 'UserController@statistics')->name('statistics');
+Route::get('/users', 'UserController@users')->name('users.list');
+Route::get('/showUser/{id}', 'UserController@showUser')->name('showUser');
 
 
 // ROUTES USERS

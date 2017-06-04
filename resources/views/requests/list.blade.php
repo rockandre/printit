@@ -61,7 +61,7 @@
                 <td>
                     <div class="inline">
                         <a href="{{ route('show.request', $request->id) }}" class="btn btn-sm btn-primary">Detalhes</a>
-                        @if($request->user->id == Auth::user()->id)
+                        @can('edit-remove-request', $request)
                         <form action="{{route('delete.request', $request)}}" method="post" class="inline">
                             {{ method_field('DELETE') }}
                             {{ csrf_field() }}
@@ -69,7 +69,8 @@
                                 <button type="submit" class="btn btn-sm btn-danger">Remover</button>
                             </div>
                         </form>
-                        @endif
+                        @endcan
+                        
                     </div>
                 </td>
                 

@@ -4,6 +4,11 @@
 <link rel="stylesheet" href="{{ URL::asset('css/requests.css') }}" />
 <div>
     <h2>Pedidos de Impressão</h2>
+    @if ($success = Session::get('success'))
+                    <div class="alert alert-info">
+                        {{$success}}
+                    </div>
+    @endif
     <div>
         <form class="form-vertical" role="form" method="get" action="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status') ])}}">
             @include('requests.partials.filter')

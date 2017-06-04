@@ -6,6 +6,11 @@
 <link rel="stylesheet" href="{{ URL::asset('css/comments.css') }}" />
 <div class="container">
 	<div class="row">
+	@if ($success = Session::get('success'))
+                    <div class="alert alert-info">
+                        {{$success}}
+                    </div>
+    @endif
 		<div class="col-md-3">
 			<h2>Funcionário</h2>
 			<br>

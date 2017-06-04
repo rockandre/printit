@@ -212,7 +212,7 @@ class RequestController extends Controller
 
     public function edit(Requests $request)
     {
-        $due_date =  $request->created_at->format('d-m-Y');
+        $due_date =  Carbon::parse($request->due_date)->format('d-m-Y');
         return view('requests.edit', compact('request', 'due_date'));
     }
 
@@ -261,6 +261,6 @@ class RequestController extends Controller
         $requestToUpdate->file = $fileName;
         $requestToUpdate->save();
 
-        return redirect()->route('requests.list');
+        return redirect()->route('requests.list')->with('success', 'Pedido editado com sucesso!');
     }
 }

@@ -21,6 +21,34 @@ class RequestController extends Controller
 
         $queries = [];
 
+        if(request()->has('description')) {
+            $requests = $requests->where('description', 'LIKE', '%'.request('description').'%');
+            $queries['description'] = request('description');
+        }
+
+        if(request()->has('user') && request('user') != -1) {
+            $requests = $requests->where('owner_id', request('user'));
+            $queries['user'] = request('user');
+        }
+
+        if(request()->has('department') && request('department') != -1) {
+            $requests = $requests->where('users.department_id', request('department'));
+            $queries['department'] = request('department');
+        }
+
+        if(request()->has('status') && request('status') != -1) {
+            $requests = $requests->where('status', request('status'));
+            $queries['status'] = request('status');
+        }
+
+        if(request()->has('date')) {
+             $date = Carbon::createFromFormat('d-m-Y', request('date'));
+            $requests = $requests->whereDay('requests.created_at', '=', $date->format('d'))
+            ->whereMonth('requests.created_at', '=', $date->format('m'))
+            ->whereYear('requests.created_at', '=', $date->format('Y'));
+            $queries['date'] = request('date');
+        }
+
         if (request()->has('orderByParam')) {
 
             if (request('orderByParam') == 'requestType') {
@@ -46,55 +74,10 @@ class RequestController extends Controller
             $requests = $requests->where('requests.owner_id', Auth::user()->id)->paginate(10)->appends($queries);
         }
 
-        $users = User::all();
-        $departments = Department::all();
+        $users = User::orderBy('name', 'asc')->get();
+        $departments = Department::orderBy('name', 'asc')->get();
 
         return view('requests.list', compact('requests', 'users', 'departments'));
-    }
-
-    public function filterRequests(Request $filter)
-    {
-        $description = $filter['description'];
-        $user_id = $filter['user_id'];
-        $department_id = $filter['department_id'];
-        $status= $filter['estado'];
-        $date = $filter['date'];
-
-        if(Auth::user()->isAdmin())
-        {
-            $requests = Requests::select('*');
-        } else {
-            $requests = Requests::where('owner_id', Auth::user()->id);
-        }
-        if($user_id != -1) {
-            $requests = $requests->where('owner_id', $user_id);
-        }
-
-        if($status != -1) {
-            $requests = $requests->where('status', $status);
-        }
-
-        if($department_id != -1) {
-            $requests = $requests
-            ->join('users', 'requests.owner_id', '=', 'users.id')->where('users.department_id', $department_id)->select('requests.*');
-        }
-
-        if(!is_null($description) && !empty($description)) {
-            $requests = $requests->where('description', 'like', '%' . $description . '%');
-        }
-
-        if(!is_null($date) && !empty($date)){
-            $date = Carbon::createFromFormat('d-m-Y', $date);
-            $requests = $requests->whereDay('created_at', '=', $date->format('d'))
-            ->whereMonth('created_at', '=', $date->format('m'))
-            ->whereYear('created_at', '=', $date->format('Y'));
-        }
-
-        $requests = $requests->paginate(10);
-
-        $funcionarios = User::all();
-        $departamentos = Department::all();
-        return view('requests.list', compact('requests', 'funcionarios', 'departamentos'));
     }
 
     public function refuseRequest($id)

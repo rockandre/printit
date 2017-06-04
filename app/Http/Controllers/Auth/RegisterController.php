@@ -61,7 +61,7 @@ class RegisterController extends Controller
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg',
             'profile_url' => 'nullable|URL',
             'presentation' => 'nullable|string|max:3000'*/
-        ]);
+            ]);
     }
 
     /**
@@ -78,7 +78,7 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
             'phone' => $data['phone'],
             'department_id' => $data['department_id']
-        ]);
+            ]);
     }
 
     protected function register(Request $request)

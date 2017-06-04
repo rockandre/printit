@@ -1,40 +1,39 @@
-{{ csrf_field() }}
-
 <div class="container">
   <div class="row">
     <table class="table">
       <thead>
         <tr class="filters">
           <th>Pesquisar
-            <input id="description" type="text" class="form-control" name="description">
+            <input id="description" type="text" class="form-control" name="description" value={{ request('description')}}>
           </th>
           @if(Auth::user()->isAdmin())
           <th>Funcionario
-            <select id="user_id" name="user_id" class="form-control">
-              <option value="-1"> -- Todos --</option>
+            <select id="user" name="user" class="form-control">
+              <option value="-1" {{ request('user') == -1 ? 'selected' : '' }}> -- Todos --</option>
               @foreach($users as $user)
-              <option value="{{$user->id}}">{{$user->name}}</option>
+              <option value="{{$user->id}}" {{ $user->id == request('user') ? 'selected' : '' }}>{{$user->name}}</option>
               @endforeach
             </select>
           </th>
           <th>Departamento
-            <select id="department_id" name="department_id" class="form-control">
-              <option value="-1" selected> -- Todos --</option>
+            <select id="department" name="department" class="form-control">
+              <option value="-1" {{ request('department') == -1 ? 'selected' : '' }}> -- Todos --</option>
               @foreach($departments as $department)
-              <option value="{{$department->id}}">{{$department->name}}</option>
+              <option value="{{$department->id}}" {{ $department->id == request('department') ? 'selected' : '' }}>{{$department->name}}</option>
               @endforeach
             </select>
           </th>
           @endif
           <th>Estado
-            <select id="estado" name="estado" class="form-control">
+            <select id="status" name="status" class="form-control">
               <option value="-1" selected>-- Todos --</option>
-              <option value="0">Pendente</option>
-              <option value="2">Concluido</option>
+              <option value="0" {{ request()->has('status') ? (request('status') == 0 ? 'selected' : '') : '' }}>Pendente</option>
+              <option value="1" {{ request('status') == 1 ? 'selected' : '' }}>Recusado</option>
+              <option value="2" {{ request('status') == 2 ? 'selected' : '' }}>Concluido</option>
             </select>
           </th>
           <th>Data
-            <input id="date" type="text" class="form-control" name="date">
+            <input id="date" type="text" class="form-control" name="date" value={{ request('date') }}>
           </th>
           <th>
             <button type="submit" class="btn btn-primary">

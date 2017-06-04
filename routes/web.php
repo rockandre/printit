@@ -33,7 +33,6 @@ Route::get('/user/{id}', 'UserController@showUser')->name('user.show');
 // ROUTES REQUESTS
 // Listar e Filtrar requests
 Route::get('/requests', 'RequestController@listRequests')->name('requests.list');
-Route::post('/requests', 'RequestController@filterRequests')->name('requests.filter');
 
 // Eliminar request
 Route::delete('/request/delete/{request}', 'RequestController@deleteRequest')->name('delete.request');
@@ -58,6 +57,8 @@ Route::post('/request/create', 'RequestController@store')->name('request.store')
 Route::get('/request/edit/{request}', 'RequestController@edit')->name('request.edit');
 Route::post('/request/edit/{requestToUpdate}', 'RequestController@update')->name('request.update');
 
+// Comentar request
+Route::post('/request/comment/{request_id}/{comment_id?}', 'CommentController@create')->name('request.comment');
 
 // Routes admin
 Route::get('/users/blocked', 'UserController@showBlockedUsers')->name('users.blocked')->middleware('admin');

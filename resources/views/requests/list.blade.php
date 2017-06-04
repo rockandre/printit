@@ -6,7 +6,7 @@
     <h1>Pedidos de Impressão</h1>
 
     <div>
-        <form class="form-vertical" role="form" method="get" action="{{ route('requests.list', ['description' => request('description'), 'user' => request('user_id')]) }}">
+        <form class="form-vertical" role="form" method="get" action="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status') ])}}">
             @include('requests.partials.filter')
         </form>
         
@@ -21,24 +21,24 @@
         <thead>
             <tr>
                 <th>Funcionário
-                    <a href="{{ route('requests.list', ['orderByParam' => 'users.name', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
-                    <a href="{{ route('requests.list', ['orderByParam' => 'users.name', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'users.name', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'users.name', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
                 </th>
                 <th>Departamento
-                    <a href="{{ route('requests.list', ['orderByParam' => 'departments.name', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
-                    <a href="{{ route('requests.list', ['orderByParam' => 'departments.name', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'departments.name', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'departments.name', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
                 </th>
                 <th>Estado
-                    <a href="{{ route('requests.list', ['orderByParam' => 'status', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
-                    <a href="{{ route('requests.list', ['orderByParam' => 'status', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'status', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'status', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
                 </th>
                 <th>Tipo de Impressão
-                    <a href="{{ route('requests.list', ['orderByParam' => 'requestType', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
-                    <a href="{{ route('requests.list', ['orderByParam' => 'requestType', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'requestType', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'requestType', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
                 </th>
                 <th>Data do Pedido
-                    <a href="{{ route('requests.list', ['orderByParam' => 'requests.created_at', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
-                    <a href="{{ route('requests.list', ['orderByParam' => 'requests.created_at', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'requests.created_at', 'orderByType' => 'asc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                    <a href="{{ route('requests.list', ['description' => request('description'), 'user' => request('user'), 'department' => request('department'), 'status' => request('status'), 'orderByParam' => 'requests.created_at', 'orderByType' => 'desc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
                 </th>
                 <th>Actions</th>
             </tr>

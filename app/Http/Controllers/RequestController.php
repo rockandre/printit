@@ -42,7 +42,7 @@ class RequestController extends Controller
         }
 
         if(request()->has('date')) {
-             $date = Carbon::createFromFormat('d-m-Y', request('date'));
+            $date = Carbon::createFromFormat('d-m-Y', request('date'));
             $requests = $requests->whereDay('requests.created_at', '=', $date->format('d'))
             ->whereMonth('requests.created_at', '=', $date->format('m'))
             ->whereYear('requests.created_at', '=', $date->format('Y'));
@@ -157,6 +157,7 @@ class RequestController extends Controller
     public function create()
     {
         $request = new Requests();
+        
         return view('requests.create', compact('request'));
     }
 
@@ -229,7 +230,7 @@ class RequestController extends Controller
         $date = $request->due_date;
         $due_date = null;
         if(!is_null($date)){
-            $due_date = \Carbon\Carbon::createFromFormat('d-m-Y', $date)->toDateString();
+            $due_date = Carbon::createFromFormat('d-m-Y', $date)->toDateString();
         }
 
         $fileName = null;
@@ -257,83 +258,5 @@ class RequestController extends Controller
         $requestToUpdate->save();
 
         return redirect()->route('requests.list');
-    }
-
-
-
-    public function statistics(){
-        $statistics = [];
-        $statistics[0] = getColoredPrints();
-        $statistics[1] = getBlackAndWhitePrints();
-        $statistics[2] = totalPrints();
-        $statistics[3] = diaryPrints();
-        $statistics[4] = averageDiaryActualMouth();
-        return view('home', compact('statistics'));
-    }
-
-
-        //Statistics!!
-
-      public function getColoredPrints(){
-
-        $requests = Requests::where('status', 2)->where('colored', 1)->get();
-        $counterColoredPrints = 0;
-
-        foreach ($requests as $request) {
-            $counterColoredPrints += $request->quantity;
-        }
-
-        return $counterColoredPrints;
-    }
-
-    public function getBlackAndWhitePrints(){
-        $requests = Requests::where('status', 2)->where('colored', 0)->get();
-        $counterBlackAndWhite = 0;
-
-        foreach ($requests as $request) {
-            $counterBlackAndWhite += $request->quantity;
-        }
-
-        return $counterBlackAndWhite;
-    }
-
-
-    public function totalPrints(){
-        $requests = Requests::where('status', 2)->get();
-        $totalPrints = 0;
-
-        foreach ($requests as $request) {
-            $totalPrints += $request->quantity;
-        }
-
-        return $totalPrints;
-    }
-
-    public function diaryPrints(){
-        $today = Date("Y-m-d");
-        $requests = Requests::where('status', 2)->where('closed_date', $today)->get();
-        $todayPrints = 0; 
-
-        foreach ($requests as $request) {
-            $todayPrints += $requests->quantity;
-        }
-
-        return $todayPrints;
-    }
-
-
-
-    public function averageDiaryActualMouth(){      
-        $today = Date("Y-m");
-        $requests = Requests::where('status', 2)->where('closed_date', $today)->get();
-        $averagePrints = 0;
-
-        foreach ($requests as $request) {
-
-            $averagePrints += $requests->quantity;
-        }
-        $averagePrints = $averagePrints / Date("d");
-
-        return $averagePrints;
     }
 }

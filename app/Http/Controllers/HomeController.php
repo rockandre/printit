@@ -3,21 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Request;
+use App\Request as Requests;
+use App\Department;
 use Khill\Lavacharts\Lavacharts;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
-    /*
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-       //Statistics!!
+    
 
     public function getColoredPrints(){
-        $requests = Request::where('status', 2)->where('colored', 1)->get();
+        $requests = Requests::where('status', 2)->where('colored', 1)->get();
         $counterColoredPrints = 0;
 
         foreach ($requests as $request) {
@@ -28,7 +24,7 @@ class HomeController extends Controller
     }
 
     public function getBlackAndWhitePrints(){
-        $requests = Request::where('status', 2)->where('colored', 0)->get();
+        $requests = Requests::where('status', 2)->where('colored', 0)->get();
         $counterBlackAndWhite = 0;
 
         foreach ($requests as $request) {
@@ -40,7 +36,7 @@ class HomeController extends Controller
 
 
     public function totalPrints(){
-        $requests = Request::where('status', 2)->get();
+        $requests = Requests::where('status', 2)->get();
         $totalPrints = 0;
 
         foreach ($requests as $request) {
@@ -50,32 +46,56 @@ class HomeController extends Controller
         return $totalPrints;
     }
 
-    public function diaryPrints(){
-        $today = Date("Y-m-d");
-        $requests = Request::where('status', 2)->where('closed_date', $today)->get();
+    public function todayPrints(){
+        $today = Carbon::now();
+        $requests = Requests::where('status', 2)->whereDay('requests.created_at', '=', $today->format('d'))
+            ->whereMonth('requests.created_at', '=', $today->format('m'))
+            ->whereYear('requests.created_at', '=', $today->format('Y'))->get();
         $todayPrints = 0; 
 
         foreach ($requests as $request) {
-            $todayPrints += $requests->quantity;
+            $todayPrints += $request->quantity;
         }
 
         return $todayPrints;
     }
 
-
-
-    public function averageDiaryActualMouth(){      
-        $today = Date("Y-m");
-        $requests = Request::where('status', 2)->where('closed_date', $today)->get();
+    public function averageDailyActualMouth(){      
+        $today = Carbon::now();
+        $requests = Requests::where('status', 2)->whereMonth('requests.created_at', '=', $today->format('m'))
+            ->whereYear('requests.created_at', '=', $today->format('Y'))->get();
         $averagePrints = 0;
 
         foreach ($requests as $request) {
-
-            $averagePrints += $requests->quantity;
+            $averagePrints += $request->quantity;
         }
-        $averagePrints = $averagePrints / Date("d");
+        $averagePrints = $averagePrints / $today->format('d');
 
         return $averagePrints;
+    }
+
+    public function departmentsStats() {
+        $departments = Department::orderBy('name', 'asc')->get();
+
+        $departmentStats = [];
+        $totalPrints = 0;
+
+        foreach ($departments as $department) {
+            $requests = Requests::leftJoin('users', 'requests.owner_id', 'users.id')
+                                ->leftJoin('departments', 'users.department_id', 'departments.id')
+                                ->where('requests.status', 2)
+                                ->where('departments.id', $department->id)
+                                ->get();
+            foreach ($requests as $request) {
+                $totalPrints += $request->quantity;
+            }
+
+            $departmentStats[$department->id]['total'] = $totalPrints;
+
+            $totalPrints = 0;
+        }
+
+        return $departmentStats;
     }
 
 
@@ -83,26 +103,35 @@ class HomeController extends Controller
     {
 		$lava = new Lavacharts; // See note below for Laravel
 
-		$reasons = $lava->DataTable();
+		$colorsVsBlackAndWhite = $lava->DataTable();
 
-		$reasons->addStringColumn('Reasons')
-		->addNumberColumn('Percent')
-		->addRow(['Check Reviews', 5])
-		->addRow(['Watch Trailers', 2])
-		->addRow(['See Actors Other Work', 4])
-		->addRow(['Settle Argument', 89]);
+        $statistics = [];
 
-		$lava->PieChart('IMDB', $reasons, [
-			'title'  => 'Reasons I visit IMDB',
+        $coloredPrints = $this->getColoredPrints();
+        $blackAndWhitePrints = $this->getBlackAndWhitePrints();
+
+        $statistics['total'] = $this->totalPrints();
+        $statistics['today'] = $this->todayPrints();
+        $statistics['dailyMonth'] = $this->averageDailyActualMouth();
+
+        $departmentStats = $this->departmentsStats();
+
+		$colorsVsBlackAndWhite->addStringColumn('Cores')
+		->addNumberColumn('Percentagem')
+		->addRow(['Preto e Branco', $coloredPrints])
+		->addRow(['Cores', $blackAndWhitePrints]);
+
+		$lava->PieChart('Cores VS Preto e Branco', $colorsVsBlackAndWhite, [
+			'title'  => 'Cores VS Preto e Branco',
 			'is3D'   => true,
 			'slices' => [
             ['offset' => 0.2],
-            ['offset' => 0.25],
-            ['offset' => 0.3]
             ]
             ]);
 
 
-		return view('home', compact('lava'));
+        $departments = Department::orderBy('name', 'asc')->get();
+
+		return view('home', compact('lava', 'departments', 'statistics', 'departmentStats'));
 	}
-}
+}   

@@ -3,6 +3,7 @@
 @section('content')
 <link rel="stylesheet" href="{{ URL::asset('css/requests.css') }}" />
 <link rel="stylesheet" href="{{ URL::asset('css/rating.css') }}" />
+<link rel="stylesheet" href="{{ URL::asset('css/comments.css') }}" />
 <div class="container">
 	<div class="row">
 		<div class="col-md-3">
@@ -17,21 +18,24 @@
 			<p><b>Nome: </b>{{ $request->user->name }}</p>
 			<p><b>Departamento: </b>{{ $request->user->department->name }}</p>
 			<p><b>Email: </b>{{ $request->user->email }}</p>
+			@if ($request->user->phone)
 			<p><b>Telefone: </b>{{ $request->user->phone }}</p>
+			@endif
+			<a href="{{ route('user.show', $request->user->id) }}" class="btn btn-sm btn-info">Ver perfil</a>
 		</div>
 		<div class="col-md-9">
 			<div class="inline">
 				<h2>Pedido de Impressão</h2>
 				@can('edit-remove-request', $request)
-				<a href="#" class="btn btn-sm btn-primary">Editar</a>
+				<a href="{{ route('request.edit', $request) }}" class="btn btn-sm btn-primary">Editar</a>
 				@endcan
 				@can('refuse-finish-request', $request)
-                    <a href="{{ route('finish.request', $request->id) }}" class="btn btn-sm btn-success">Concluir</a>
-                    <a href="{{ route('refuse.request', $request->id) }}" class="btn btn-sm btn-warning">Recusar</a>
+				<a href="{{ route('finish.request', $request->id) }}" class="btn btn-sm btn-success">Concluir</a>
+				<a href="{{ route('refuse.request', $request->id) }}" class="btn btn-sm btn-warning">Recusar</a>
 				@endcan
 			</div>
 			<br>
-			<p><b>Data do Pedido: </b>{{ $request->created_at }}</p>
+			<p><b>Data do Pedido: </b>{{ $request->created_at->format('d-m-Y') }}</p>
 			<p><b>Estado do Pedido: </b>{{ $request->statusToStr() }}</p>
 			@if ($request->status == 2)
 			<div class="col-md-12">
@@ -70,6 +74,7 @@
 				<li>{{ $request->paper_sizeToStr() }}</li>
 				<li>{{ $request->paper_typeToStr() }}</li>
 			</ul>
+			<p><b>Quantidade: </b>{{ $request->quantity }}</p>
 			<p><b>Ficheiro: </b>{{ $request->file }}</p>
 			<p><b>Descrição: </b>{{ $request->description }}</p>
 		</div>
@@ -88,10 +93,16 @@
 					@endif
 				</div>
 				<div class="media-body">
-					<h4 class="media-heading">{{ $comments->user->name }}<small><i> Posted on {{ $comments->created_at }}</i></small></h4>
+					<h4 class="media-heading">{{ $comments->user->name }}<small><i> Publicado em {{ $comments->created_at }}</i></small></h4>
 					<p>{{ $comments->comment }}</p>
 
 					<button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#comment_response{{$comments->id}}">Responder</button>
+					@if(Auth::user()->isAdmin())
+					<form class="inline" action="{{ route('comment.block', [$comments, $request->id]) }}" method="POST">
+						{{ csrf_field() }}
+						<button type="submit" class="btn btn-sm btn-danger btn_comment">Bloquear</button>
+					</form>
+					@endif
 					<div id="comment_response{{$comments->id}}" class="collapse">
 						<div class="commentArea">
 							Escrever comentário:
@@ -116,8 +127,14 @@
 							@endif
 						</div>
 						<div class="media-body">
-							<h4 class="media-heading">{{ $comment->user->name }}<small><i> Posted on {{ $comment->created_at }}</i></small></h4>
+							<h4 class="media-heading">{{ $comment->user->name }}<small><i> Publicado em {{ $comment->created_at }}</i></small></h4>
 							<p>{{ $comment->comment }}</p>
+							@if(Auth::user()->isAdmin())
+							<form action="{{ route('comment.block', [$comment, $request->id]) }}" method="POST">
+								{{ csrf_field() }}
+								<button type="submit" class="btn btn-sm btn-danger btn_comment">Bloquear</button>
+							</form>
+							@endif
 						</div>
 					</div>
 					@endif

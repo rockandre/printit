@@ -8,11 +8,10 @@
 		@if($user->profile_photo)
 		<img src="{{ route('profile.image', $user->profile_photo) }}" height="250" width="250"> 
 		@else
-		<img src="{{ route('profile.image', "default_profile.jpg") }}" height="45" width="45">
+		<img src="{{ route('profile.image', "default_profile.jpg") }}" height="250" width="250">
 		@endif
 	</div>	
 	<div class="col-sm-9">
-		@endif
 		<div>
 			<h1>Informação Pessoal</h1>
 			@can('block-user', $user)
@@ -27,7 +26,9 @@
 			<div class="col-sm-4">
 				<p><b>Nome</b></p>
 				<p><b>Email</b></p>
+				@if($user->phone)
 				<p><b>Telefone</b></p>
+				@endif
 				<p><b>Department</b></p>
 				@if($user->profile_url)
 				<p><b>Profile URL</b></p>
@@ -39,7 +40,9 @@
 			<div class="col-sm-8">
 				<p>{{$user->name}}</p>
 				<p>{{$user->email}}</p>
+				@if($user->phone)
 				<p>{{$user->phone}}</p>
+				@endif
 				<p>{{$user->department->name}}</p>
 				@if($user->profile_url)
 				<p>{{$user->profile_url}}</p>
@@ -50,6 +53,5 @@
 			</div>
 		</div>
 	</div>
-</div>
 </div>
 @endsection

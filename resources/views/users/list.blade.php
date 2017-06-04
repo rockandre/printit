@@ -3,7 +3,7 @@
 @section('content')
 <link rel="stylesheet" href="{{ URL::asset('css/users.css') }}" />
 <div>
-    <h1>Utilizadores</h1>
+    <h2>Funcionários</h2>
     <div>
         <form class="form-vertical" role="form" method="GET" action="{{ route('users.list', ['user_search' => request('user_search'), 'department' => request('department')]) }}">
             @include('users.partials.filter')
@@ -11,7 +11,7 @@
     </div>
     @if(count($users) == 0)
     <div class="alert alert-danger">
-        <strong>Erro!</strong> Não foram encontrados Utilizadores!
+        <strong>Erro!</strong> Não foram encontrados Funcionários!
     </div>
     @else
     <table class="table table-striped">

@@ -7,7 +7,7 @@
             <input id="description" type="text" class="form-control" name="description" value={{ request('description')}}>
           </th>
           @if(Auth::user()->isAdmin())
-          <th>Funcionario
+          <th>Funcionário
             <select id="user" name="user" class="form-control">
               <option value="-1" {{ request('user') == -1 ? 'selected' : '' }}> -- Todos --</option>
               @foreach($users as $user)

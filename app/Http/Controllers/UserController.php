@@ -21,12 +21,12 @@ class UserController extends Controller
 
         if (request()->has('user_search')) {
             $users = $users->where('name', 'LIKE', '%'.request('user_search').'%');
-            $queries['name'] = request('user_search');
+            $queries['user_search'] = request('user_search');
         }
 
         if (request()->has('department') && request('department') != -1) {
             $users = $users->where('department_id', request('department'));
-            $queries['department_id'] = request('department');
+            $queries['department'] = request('department');
         }
 
         if (request()->has('orderByParam')) {
@@ -50,9 +50,33 @@ class UserController extends Controller
 
     public function showBlockedUsers()
     {
-        $blockedUsers = User::where('blocked', '1')->paginate(10);
+        $users = User::where('blocked', '1');
 
-        return view('admin.list-blocked-users', compact('blockedUsers'));
+        $queries = [];
+
+        if (request()->has('user_search')) {
+            $users = $users->where('name', 'LIKE', '%'.request('user_search').'%');
+            $queries['name'] = request('user_search');
+        }
+
+        if (request()->has('department') && request('department') != -1) {
+            $users = $users->where('department_id', request('department'));
+            $queries['department_id'] = request('department');
+        }
+
+        if (request()->has('orderByParam')) {
+            $users = $users->orderBy(request('orderByParam'), request('orderByType'));
+            $queries['orderByParam'] = request('orderByParam');
+            $queries['orderByType'] = request('orderByType');
+        } else {
+            $users = $users->orderBy('name', 'asc');
+        }
+
+        $users = $users->paginate(10)->appends($queries);
+
+        $departments = Department::all();
+
+        return view('admin.list-blocked-users', compact('users', 'userslist', 'departments'));
     }
 
     public function unlockUser($id)

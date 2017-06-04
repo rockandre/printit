@@ -19,9 +19,6 @@ Route::get('/users/confirmation/{token}', 'Auth\RegisterController@confirmation'
 // ROUTES PAGINA INICIAL
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/users', 'UserController@users')->name('users.list');
-Route::get('/showUser/{id}', 'UserController@showUser')->name('showUser');
-
 
 // ROUTES USERS
 // Listar e filtrar utilizadores
@@ -32,46 +29,57 @@ Route::get('/user/{id}', 'UserController@showUser')->name('user.show');
 
 
 // ROUTES REQUESTS
-// Listar e Filtrar requests
-Route::get('/requests', 'RequestController@listRequests')->name('requests.list');
 
-// Eliminar request
-Route::delete('/request/delete/{request}', 'RequestController@deleteRequest')->name('delete.request');
+Route::group(['middleware' => 'auth'], function() {
+	// Listar e Filtrar requests
+	Route::get('/requests', 'RequestController@listRequests')->name('requests.list');
 
-// Recusar request
-Route::get('/request/refuse/{id}', 'RequestController@refuseRequest')->name('refuse.request');
-Route::post('/request/refuse/{id}', 'RequestController@updateRefuseRequest')->name('refuse.request');
+	// Eliminar request
+	Route::delete('/request/delete/{request}', 'RequestController@deleteRequest')->name('delete.request');
 
-// Concluir request
-Route::get('/request/finish/{id}', 'RequestController@finishRequest')->name('finish.request');
-Route::post('/request/finish/{id}', 'RequestController@updateFinishRequest')->name('finish.request');
+	// Recusar request
+	Route::get('/request/refuse/{id}', 'RequestController@refuseRequest')->name('refuse.request');
+	Route::post('/request/refuse/{id}', 'RequestController@updateRefuseRequest')->name('refuse.request');
 
-// Mostrar e Avaliar request
-Route::get('/request/show/{id}', 'RequestController@showRequest')->name('show.request');
-Route::post('/request/evaluate/{id}', 'RequestController@evaluateRequest')->name('evaluate.request');
+	// Concluir request
+	Route::get('/request/finish/{id}', 'RequestController@finishRequest')->name('finish.request');
+	Route::post('/request/finish/{id}', 'RequestController@updateFinishRequest')->name('finish.request');
 
-// Criar request
-Route::get('/request/create', 'RequestController@create')->name('request.create');
-Route::post('/request/create', 'RequestController@store')->name('request.store');
+	// Mostrar e Avaliar request
+	Route::get('/request/show/{id}', 'RequestController@showRequest')->name('show.request');
+	Route::post('/request/evaluate/{id}', 'RequestController@evaluateRequest')->name('evaluate.request');
 
-// Editar request
-Route::get('/request/edit/{request}', 'RequestController@edit')->name('request.edit');
-Route::post('/request/edit/{requestToUpdate}', 'RequestController@update')->name('request.update');
+	// Criar request
+	Route::get('/request/create', 'RequestController@create')->name('request.create');
+	Route::post('/request/create', 'RequestController@store')->name('request.store');
 
-// Comentar request
-Route::post('/request/comment/{request_id}/{comment_id?}', 'CommentController@create')->name('request.comment');
+	// Editar request
+	Route::get('/request/edit/{request}', 'RequestController@edit')->name('request.edit');
+	Route::post('/request/edit/{requestToUpdate}', 'RequestController@update')->name('request.update');
+
+	// Comentar request
+	Route::post('/request/comment/{request_id}/{comment_id?}', 'CommentController@create')->name('request.comment');
+});
+
 
 // Routes admin
-Route::get('/users/blocked', 'UserController@showBlockedUsers')->name('users.blocked')->middleware('admin');
-Route::post('/user/unlock/{id}', 'UserController@unlockUser')->name('unlock.user')->middleware('admin');
-Route::post('/user/block/{id}', 'UserController@blockUser')->name('block.user')->middleware('admin');
-Route::post('/user/admin/{id}', 'UserController@makeUserAdmin')->name('admin.user');
-Route::post('/user/normal/{id}', 'UserController@revokeUserAdmin')->name('normal.user');
-//Route::get('/admin/comments', 'AdministratorController@showComments')->name('comments.admin');
+Route::group(['middleware' => 'admin'], function() {
+	Route::get('/users/blocked', 'UserController@showBlockedUsers')->name('users.blocked');
+	Route::get('/comments/blocked', 'CommentController@showBlockedComments')->name('comments.blocked');
+	Route::post('/user/unlock/{id}', 'UserController@unlockUser')->name('unlock.user');
+	Route::post('/user/block/{id}', 'UserController@blockUser')->name('block.user');
+	Route::post('/user/admin/{id}', 'UserController@makeUserAdmin')->name('admin.user');
+	Route::post('/user/normal/{id}', 'UserController@revokeUserAdmin')->name('normal.user');
+	Route::post('/comment/block/{comment}/{request_id}', 'CommentController@blockComment')->name('comment.block');
+	Route::post('/comment/unlock/{comment}', 'CommentController@unlockComment')->name('comment.unlock');
+});
 
+
+
+Route::get('/department/{id}', 'DepartmentController@statistics')->name('department.stats');
 
 // Route Image
 Route::get('/profileImage/{filename}', function ($filename)
 {
 	return Image::make(Storage::disk('local')->get('public/profiles/'.$filename))->response();
-})->name('profile.image');
+})->name('profile.image')->middleware('auth');

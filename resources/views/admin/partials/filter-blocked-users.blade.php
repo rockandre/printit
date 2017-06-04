@@ -3,7 +3,7 @@
         <table class="table">
             <thead>
                 <tr class="filters">
-                    <th>Funcionário
+                    <th>Funcionario
                     <input id="user_search" type="text" class="form-control" name="user_search" 
                            placeholder="Insira o nome do Funcionario!" value={{request('user_search')}}>
                     </th>
